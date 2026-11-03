@@ -1,38 +1,69 @@
-// Beispiel-Räume – später durch echte Daten (z. B. Firebase/Supabase) ersetzen
-const rooms = [
-  { name: "Nachtschicht", players: 5, max: 8, live: true,  colors: ["#ff2a3d", "#ffffff", "#7a7a80"] },
-  { name: "Chill-Lounge", players: 3, max: 10, live: true, colors: ["#ffffff", "#ff2a3d"] },
-  { name: "Turnier #1",   players: 1, max: 4, live: false, colors: ["#b3121f"] },
-];
+// Startseite (Lobby): Name, Raum beitreten, Raum für ein Spiel erstellen
+const nameInput = document.getElementById("player-name");
+const codeInput = document.getElementById("room-code");
+const errorBox = document.getElementById("lobby-error");
 
-function renderRooms() {
-  const list = document.getElementById("room-list");
-  list.innerHTML = rooms.map(r => `
-    <div class="room">
-      <span class="status ${r.live ? "live" : "waiting"}">${r.live ? "● LIVE" : "○ WARTET"}</span>
-      <h3>${r.name}</h3>
-      <small>${r.players}/${r.max} Spieler</small>
-      <div class="avatars">${r.colors.map(c => `<i style="background:${c}"></i>`).join("")}</div>
+nameInput.value = getName();
+nameInput.addEventListener("input", () => setName(nameInput.value.trim()));
+
+function requireName() {
+  const name = nameInput.value.trim();
+  if (!name) {
+    errorBox.textContent = "Bitte gib zuerst deinen Namen ein.";
+    nameInput.focus();
+    return null;
+  }
+  setName(name);
+  errorBox.textContent = "";
+  return name;
+}
+
+function renderGames() {
+  const list = document.getElementById("game-list");
+  list.innerHTML = Object.entries(GAMES).map(([id, g]) => `
+    <div class="room game ${g.ready ? "" : "soon"}">
+      <span class="status ${g.ready ? "live" : "waiting"}">${g.ready ? "● SPIELBAR" : "○ BALD"}</span>
+      <h3>${escapeHtml(g.name)}</h3>
+      <p class="game-desc">${escapeHtml(g.desc)}</p>
+      <small>${g.min}–${g.max} Spieler</small>
+      <button class="btn ${g.ready ? "btn-primary" : "btn-ghost"} create-btn" data-game="${id}" ${g.ready ? "" : "disabled"}>
+        ${g.ready ? "+ Raum erstellen" : "In Arbeit"}
+      </button>
     </div>`).join("");
 }
 
-function randomCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  const pick = n => Array.from({ length: n }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-  return `${pick(3)}-${pick(2)}`;
+async function createRoom(gameId) {
+  if (!requireName()) return;
+  await Backend.init();
+  let code;
+  for (let i = 0; i < 5; i++) {
+    code = randomCode();
+    if (!(await Backend.get(`rooms/${code}`))) break;
+  }
+  await Backend.set(`rooms/${code}`, {
+    game: gameId,
+    host: getPlayerId(),
+    state: "lobby",
+    created: Date.now()
+  });
+  location.href = `raum.html?code=${code}`;
 }
 
-document.getElementById("join-form").addEventListener("submit", e => {
+document.getElementById("game-list").addEventListener("click", e => {
+  const btn = e.target.closest(".create-btn");
+  if (btn && !btn.disabled) createRoom(btn.dataset.game);
+});
+
+document.getElementById("join-form").addEventListener("submit", async e => {
   e.preventDefault();
-  const code = document.getElementById("room-code").value.trim();
-  if (!code) return;
-  alert(`Beitreten zu Raum ${code} – Funktion folgt bald!`);
+  if (!requireName()) return;
+  const code = normalizeCode(codeInput.value);
+  if (!code) { errorBox.textContent = "Bitte gib einen Raumcode ein."; return; }
+  await Backend.init();
+  const room = await Backend.get(`rooms/${code}`);
+  if (!room) { errorBox.textContent = `Raum ${code} wurde nicht gefunden.`; return; }
+  location.href = `raum.html?code=${code}`;
 });
 
-document.getElementById("create-room").addEventListener("click", () => {
-  const code = randomCode();
-  rooms.unshift({ name: `Neuer Raum ${code}`, players: 1, max: 8, live: false, colors: ["#ff2a3d"] });
-  renderRooms();
-});
-
-renderRooms();
+renderGames();
+showModeBadge();

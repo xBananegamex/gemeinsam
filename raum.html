@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Raum – Gemeinsam</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="./" class="logo">Gemein<span>sam</span></a>
+      <div class="room-code-box">
+        <span class="muted">Raum</span>
+        <strong id="room-code-label">–</strong>
+        <button class="btn btn-small btn-secondary" id="copy-link">Link kopieren</button>
+      </div>
+    </nav>
+
+    <main id="room-root" class="room-root">
+      <p class="muted">Lade Raum …</p>
+    </main>
+  </div>
+
+  <footer>Gemeinsam · ein Projekt von xBananegamex</footer>
+  <script src="firebase-config.js"></script>
+  <script src="backend.js"></script>
+  <script src="common.js"></script>
+  <script src="imposter.js"></script>
+  <script src="raum.js"></script>
+</body>
+</html>

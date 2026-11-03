@@ -3,37 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gemeinsam</title>
+  <title>Gemeinsam – Spiele mit Freunden</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <nav>
-      <a href="#" class="logo">Gemein<span>sam</span></a>
+      <a href="./" class="logo">Gemein<span>sam</span></a>
       <ul class="nav-links">
-        <li><a href="#" class="active">Lobby</a></li>
-        <li><a href="#raeume">Räume</a></li>
-        <li><a href="#">Login</a></li>
+        <li><a href="./" class="active">Lobby</a></li>
+        <li><a href="#spiele">Spiele</a></li>
       </ul>
     </nav>
 
     <section class="hero">
       <h1>Deine Crew.<br><span>Ein Raum.</span></h1>
-      <p>Raum öffnen, Code verschicken, zusammen loslegen – in Echtzeit.</p>
+      <p>Spiel auswählen, Raum öffnen, Code verschicken – und zusammen im Browser zocken.</p>
+
+      <div class="name-row">
+        <label for="player-name">Dein Name</label>
+        <input id="player-name" maxlength="20" placeholder="z. B. Daniel" autocomplete="off">
+      </div>
+
       <form class="join" id="join-form">
-        <input id="room-code" placeholder="Code z. B. XK7-42" autocomplete="off">
+        <input id="room-code" placeholder="Raumcode, z. B. XK7Q2" maxlength="8" autocomplete="off">
         <button type="submit" class="btn btn-primary">Beitreten</button>
-        <button type="button" class="btn btn-secondary" id="create-room">+ Raum erstellen</button>
       </form>
+      <p class="error" id="lobby-error"></p>
     </section>
 
-    <h2 class="section-title" id="raeume">Aktive Räume</h2>
-    <section class="rooms" id="room-list">
+    <h2 class="section-title" id="spiele">Spiele – Raum erstellen</h2>
+    <section class="rooms" id="game-list">
       <!-- Wird von script.js befüllt -->
     </section>
   </div>
 
   <footer>Gemeinsam · ein Projekt von xBananegamex</footer>
+  <script src="firebase-config.js"></script>
+  <script src="backend.js"></script>
+  <script src="common.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
