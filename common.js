@@ -22,8 +22,9 @@ function getPlayerId() {
   return id;
 }
 
-function getName() { return storageGet(localStorage, "gemeinsam-name") || ""; }
-function setName(name) { storageSet(localStorage, "gemeinsam-name", name); }
+// Name pro Tab (sessionStorage) mit Fallback auf den zuletzt benutzten Namen (localStorage)
+function getName() { return storageGet(sessionStorage, "gemeinsam-name") || storageGet(localStorage, "gemeinsam-name") || ""; }
+function setName(name) { storageSet(sessionStorage, "gemeinsam-name", name); storageSet(localStorage, "gemeinsam-name", name); }
 
 function randomCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -59,4 +60,13 @@ function showModeBadge() {
   document.body.classList.add("has-badge");
   b.textContent = "Testmodus: Räume funktionieren nur zwischen Tabs in diesem Browser";
   document.body.appendChild(b);
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
