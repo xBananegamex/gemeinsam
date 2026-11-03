@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gemeinsam</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="#" class="logo">Gemein<span>sam</span></a>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Lobby</a></li>
+        <li><a href="#raeume">Räume</a></li>
+        <li><a href="#">Login</a></li>
+      </ul>
+    </nav>
+
+    <section class="hero">
+      <h1>Deine Crew.<br><span>Ein Raum.</span></h1>
+      <p>Raum öffnen, Code verschicken, zusammen loslegen – in Echtzeit.</p>
+      <form class="join" id="join-form">
+        <input id="room-code" placeholder="Code z. B. XK7-42" autocomplete="off">
+        <button type="submit" class="btn btn-primary">Beitreten</button>
+        <button type="button" class="btn btn-secondary" id="create-room">+ Raum erstellen</button>
+      </form>
+    </section>
+
+    <h2 class="section-title" id="raeume">Aktive Räume</h2>
+    <section class="rooms" id="room-list">
+      <!-- Wird von script.js befüllt -->
+    </section>
+  </div>
+
+  <footer>Gemeinsam · ein Projekt von xBananegamex</footer>
+  <script src="script.js"></script>
+</body>
+</html>
