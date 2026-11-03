@@ -225,7 +225,7 @@ const ImposterGame = (() => {
     const round = room.round;
     const rounds = Math.max(1, round.clueRound);
     const cur = room.state === "clues" ? currentPlayer(room) : null;
-    const ids = round.order.filter(id => present(room, id) || Object.values(round.clues || {}).some(c => c[id] != null));
+    const ids = round.order.filter(id => present(room, id) || Object.values(round.clues || {}).some(c => c && c[id] != null));
     const head = Array.from({ length: rounds }, (_, i) => `<th>Runde ${i + 1}</th>`).join("");
     const rows = ids.map(id => {
       const imp = round.revealed && id === round.imposter;

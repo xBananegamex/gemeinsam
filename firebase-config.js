@@ -3,11 +3,11 @@
 // Solange apiKey leer ist, läuft die Seite im "Testmodus": Räume funktionieren dann nur
 // zwischen Tabs im selben Browser (praktisch zum Ausprobieren).
 window.FIREBASE_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  databaseURL: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyAVUyppn626v4og2yLlgz3ROx6Vb21jGso",
+  authDomain: "gemeinsam-a748d.firebaseapp.com",
+  databaseURL: "https://gemeinsam-a748d-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "gemeinsam-a748d",
+  storageBucket: "gemeinsam-a748d.firebasestorage.app",
+  messagingSenderId: "468794419160",
+  appId: "1:468794419160:web:d4cfa92cc3f8365f0674ad"
 };
