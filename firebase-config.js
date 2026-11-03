@@ -11,3 +11,6 @@ window.FIREBASE_CONFIG = {
   messagingSenderId: "468794419160",
   appId: "1:468794419160:web:d4cfa92cc3f8365f0674ad"
 };
+
+// Discord-Login: Client-ID aus dem Discord Developer Portal (leer = Discord-Button ausgeblendet)
+window.DISCORD_CLIENT_ID = "";

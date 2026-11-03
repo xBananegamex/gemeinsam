@@ -70,3 +70,15 @@ function shuffle(arr) {
   }
   return a;
 }
+
+// ---------- Profilbild (z. B. von Discord) ----------
+const AVATAR_OK = /^https:\/\/cdn\.discordapp\.com\/[\w\/.?=-]+$/;
+function getAvatar() { const a = storageGet(localStorage, "gemeinsam-avatar") || ""; return AVATAR_OK.test(a) ? a : ""; }
+function setAvatar(url) { storageSet(localStorage, "gemeinsam-avatar", url || ""); }
+
+function avatarHtml(p) {
+  if (p && typeof p.avatar === "string" && AVATAR_OK.test(p.avatar)) return `<img class="avatar" src="${escapeHtml(p.avatar)}" alt="">`;
+  return `<i class="avatar" style="background:${escapeHtml((p && p.color) || "#444")}"></i>`;
+}
+
+const randomId = () => Math.random().toString(36).slice(2, 10);

@@ -4,6 +4,7 @@ const GAME_MODULES = { imposter: ImposterGame };
 const root = document.getElementById("room-root");
 const code = normalizeCode(new URLSearchParams(location.search).get("code"));
 const pid = getPlayerId();
+const sess = randomId(); // neu bei jedem Laden der Seite (für die Kamera-Verbindungen)
 document.getElementById("room-code-label").textContent = code || "–";
 
 document.getElementById("copy-link").addEventListener("click", async e => {
@@ -22,7 +23,10 @@ function askName() {
           <input id="name-input" maxlength="20" placeholder="Dein Name" autocomplete="off" required>
           <button class="btn btn-primary">Beitreten</button>
         </form>
+        ${Discord.enabled() ? `<p class="muted or">oder</p><button class="btn btn-discord" id="discord-join">Mit Discord anmelden</button>` : ""}
       </div>`;
+    const dj = document.getElementById("discord-join");
+    if (dj) dj.addEventListener("click", () => Discord.login(code));
     const input = document.getElementById("name-input");
     input.focus();
     document.getElementById("name-form").addEventListener("submit", e => {
@@ -100,8 +104,13 @@ async function start() {
   const name = getName() || (await askName());
   const players = room.players || {};
   const color = PLAYER_COLORS[Object.keys(players).filter(id => id !== pid).length % PLAYER_COLORS.length];
-  await Backend.set(`rooms/${code}/players/${pid}`, {
-    name, color, joined: (players[pid] && players[pid].joined) || Date.now()
+  const me = { name, color, sess, joined: (players[pid] && players[pid].joined) || Date.now() };
+  const avatar = getAvatar();
+  if (avatar) me.avatar = avatar;
+  await Backend.set(`rooms/${code}/players/${pid}`, me);
+  Cam.init(code, pid, sess, (r, id) => {
+    const m = GAME_MODULES[r.game];
+    return m && m.playerStatus ? m.playerStatus(r, id) : {};
   });
   Backend.onDisconnectRemove(`rooms/${code}/players/${pid}`);
 
@@ -111,6 +120,7 @@ async function start() {
     const host = effectiveHost(data);
     ctx = { pid, code, isHost: host === pid, host, path: `rooms/${code}`, rerender };
     rerender();
+    Cam.update(data);
   });
 }
 
@@ -119,7 +129,7 @@ function renderPlayerList(room, ctx, extra = () => "") {
   const host = effectiveHost(room);
   return `<ul class="player-list">${sortedPlayers(room.players).map(p => `
     <li class="${p.id === ctx.pid ? "me" : ""}">
-      <i class="avatar" style="background:${p.color}"></i>
+      ${avatarHtml(p)}
       <span>${escapeHtml(p.name)}${p.id === ctx.pid ? " (du)" : ""}</span>
       ${p.id === host ? `<span class="tag">Host</span>` : ""}
       ${extra(p)}

@@ -218,3 +218,35 @@ table.clues td.muted { color: #5a5a60; }
 .cat-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 .pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--surface-strong); border: 1px solid #2c2c30; cursor: pointer; }
 .pill input { accent-color: var(--red); }
+
+/* ===== Discord ===== */
+.btn-discord { background: #5865f2; color: #fff; }
+.btn-discord:hover { background: #4752c4; }
+.discord-box { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.discord-box:empty { display: none; }
+.discord-me { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.9rem; }
+img.avatar { object-fit: cover; background: #222; }
+.or { text-align: center; margin: 12px 0 8px; }
+.panel .btn-discord { width: 100%; }
+
+/* ===== Kamera ===== */
+.cam-section { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.cam-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.cam-bar { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.cam-bar.empty { display: none; }
+.cam-tile {
+  position: relative; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden;
+  background: var(--surface-strong); border: 2px solid #2c2c30; transition: filter .3s, opacity .3s, border-color .3s;
+}
+.cam-tile video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cam-tile.me video { transform: scaleX(-1); }
+.cam-tile .cam-off { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: var(--surface-strong); }
+.cam-tile .cam-off .avatar { width: 56px; height: 56px; }
+.cam-tile.novideo .cam-off { display: flex; }
+.cam-name {
+  position: absolute; left: 6px; bottom: 6px; right: 6px; font-size: 0.78rem; font-weight: 600;
+  background: rgba(0, 0, 0, 0.6); padding: 3px 8px; border-radius: 999px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cam-tile.out { filter: grayscale(1); opacity: 0.5; }
+.cam-tile.imp { border-color: var(--red); box-shadow: 0 0 20px rgba(255, 42, 61, 0.7); animation: glow 1.4s ease-in-out infinite alternate; }
+.cam-tile.imp .cam-name { color: var(--red); }

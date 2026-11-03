@@ -65,5 +65,29 @@ document.getElementById("join-form").addEventListener("submit", async e => {
   location.href = `raum.html?code=${code}`;
 });
 
+// ---------- Discord ----------
+function renderDiscord() {
+  const box = document.getElementById("discord-box");
+  if (!Discord.enabled()) { box.innerHTML = ""; return; }
+  if (Discord.isLoggedIn()) {
+    box.innerHTML = `<span class="discord-me">${avatarHtml({ avatar: getAvatar() })} Mit Discord angemeldet</span>
+      <button class="btn btn-small btn-ghost" id="discord-logout">Abmelden</button>`;
+    document.getElementById("discord-logout").onclick = () => { Discord.logout(); renderDiscord(); };
+  } else {
+    box.innerHTML = `<button class="btn btn-small btn-discord" id="discord-login">Mit Discord anmelden</button>`;
+    document.getElementById("discord-login").onclick = () => Discord.login();
+  }
+}
+
+(async () => {
+  const r = await Discord.handleRedirect();
+  if (r && r.error) errorBox.textContent = r.error;
+  if (r && r.ok) {
+    nameInput.value = getName();
+    if (r.returnCode) { location.href = `raum.html?code=${r.returnCode}`; return; }
+  }
+  renderDiscord();
+})();
+
 renderGames();
 showModeBadge();

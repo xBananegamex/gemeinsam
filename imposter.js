@@ -214,7 +214,7 @@ const ImposterGame = (() => {
       const out = round.out && round.out[id] >= round.clueRound && room.state !== "result";
       const imp = round.revealed && id === round.imposter;
       return `<div class="chip ${id === cur ? "turn" : ""} ${out ? "out" : ""} ${imp ? "imp" : ""}">
-        <i class="avatar" style="background:${colorOf(room, id)}"></i>
+        ${avatarHtml(room.players && room.players[id])}
         <span>${escapeHtml(nameOf(room, id))}${id === ctx.pid ? " (du)" : ""}</span>
         ${out ? `<small>setzt aus</small>` : ""}${imp ? `<small>Imposter</small>` : ""}
       </div>`;
@@ -237,7 +237,7 @@ const ImposterGame = (() => {
         if (id === cur && r === round.clueRound) return `<td class="writing">schreibt …</td>`;
         return `<td class="muted"></td>`;
       }).join("");
-      return `<tr class="${imp ? "imp" : ""} ${id === ctx.pid ? "me" : ""}"><th><i class="avatar" style="background:${colorOf(room, id)}"></i>${escapeHtml(nameOf(room, id))}</th>${cells}</tr>`;
+      return `<tr class="${imp ? "imp" : ""} ${id === ctx.pid ? "me" : ""}"><th>${avatarHtml(room.players && room.players[id])}${escapeHtml(nameOf(room, id))}</th>${cells}</tr>`;
     }).join("");
     return `<div class="table-wrap"><table class="clues"><thead><tr><th>Spieler</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
   }
@@ -367,7 +367,7 @@ const ImposterGame = (() => {
         <div class="vote-grid">
           ${voters.map(id => `
             <button class="vote-btn ${votes[ctx.pid] === id ? "selected" : ""}" data-action="vote" data-target="${id}" ${!canVote || id === ctx.pid ? "disabled" : ""}>
-              <i class="avatar" style="background:${colorOf(room, id)}"></i>${escapeHtml(nameOf(room, id))}
+              ${avatarHtml(room.players && room.players[id])}${escapeHtml(nameOf(room, id))}
               ${votes[id] ? `<span class="tag">✓</span>` : ""}
             </button>`).join("")}
           <button class="vote-btn skip ${votes[ctx.pid] === "skip" ? "selected" : ""}" data-action="vote" data-target="skip" ${canVote ? "" : "disabled"}>⏭ ${skipLabel}</button>
@@ -430,6 +430,16 @@ const ImposterGame = (() => {
 
   // ---------- Schnittstelle für raum.js ----------
   return {
+    // Für die Kamera-Leiste: grau (setzt aus) / rot (enttarnter Imposter)
+    playerStatus(room, id) {
+      const r = room.round;
+      if (!r || room.state === "lobby") return {};
+      return {
+        out: room.state !== "result" && !!(r.out && r.out[id] >= r.clueRound),
+        imp: !!(r.revealed && id === r.imposter)
+      };
+    },
+
     render(room, ctx) {
       lastRoom = room; lastCtx = ctx;
       if (room.round && room.state === "clues") return cluesView(room, ctx);
